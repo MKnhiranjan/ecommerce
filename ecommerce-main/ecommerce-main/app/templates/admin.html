@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Monitoring</title>
+    <style>
+        /* Add your custom CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .module {
+            margin-bottom: 30px;
+        }
+        h2 {
+            margin-bottom: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin: 0;
+        }
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <!-- Registered Users module -->
+    <div class="module">
+        <h2>Registered Users</h2>
+        <table class="user-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Date Joined</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through registered users -->
+                {% for user in registered_users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.date_joined }}</td>
+                    <td>
+                        <form method="post" action="{% url 'delete_user' user.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add New User module -->
+    <div class="module" id="add-user-module">
+        <h2>Add New User</h2>
+        <form method="post" action="{% url 'add_user' %}">
+            {% csrf_token %}
+            {{ user_add_form }}
+            <button type="submit" name="add_user">Add User</button>
+        </form>
+    </div>
+
+    <!-- Add User button -->
+    <button id="add-user-btn">Add New User</button>
+
+    <!-- Products module -->
+    <div class="module">
+        <h2>Products</h2>
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Loop through products -->
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>
+                        <form method="post" action="{% url 'delete_product' product.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <!-- Add Product form -->
+        <div class="module" id="add-product-module">
+            <h2>Add New Product</h2>
+            <form method="post" action="{% url 'add_product' %}">
+                {% csrf_token %}
+                {{ product_form }}
+                <button type="submit" name="add_product">Add Product</button>
+            </form>
+        </div>
+    </div>
+    <button id="add-product-btn">Add Product</button>
+    <!-- JavaScript to toggle Add New User and Add New Product modules -->
+    <script>
+        // Get the Add New User and Add New Product modules and button elements
+        const addUserModule = document.getElementById('add-user-module');
+        const addUserBtn = document.getElementById('add-user-btn');
+        const addProductModule = document.getElementById('add-product-module');
+        const addProductBtn = document.getElementById('add-product-btn');
+
+        // Hide the Add New User and Add New Product modules initially
+        addUserModule.style.display = 'none';
+        addProductModule.style.display = 'none';
+
+        // Add event listener to the Add User button
+        addUserBtn.addEventListener('click', function() {
+            // Toggle the visibility of the Add New User module
+            if (addUserModule.style.display === 'none') {
+                addUserModule.style.display = 'block';
+            } else {
+                addUserModule.style.display = 'none';
+            }
+        });
+
+        // Add event listener to the Add Product button
+        addProductBtn.addEventListener('click', function() {
+            // Toggle the visibility of the Add New Product module
+            if (addProductModule.style.display === 'none') {
+                addProductModule.style.display = 'block';
+            } else {
+                addProductModule.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
